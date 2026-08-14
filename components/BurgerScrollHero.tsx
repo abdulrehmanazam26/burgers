@@ -1,5 +1,6 @@
 "use client";
 import {useLayoutEffect,useRef} from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {site} from "@/data/site";
@@ -10,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 const assembled=[-112,-65,-32,-36,-4,26,66];
 const exploded=[-135,-78,0,-24,27,70,110];
 const rebuildOrder=[6,5,4,3,1,0];
+const layerHeights=[275,220,200,200,235,145,236];
 
 export function BurgerScrollHero(){
   const root=useRef<HTMLElement>(null);
@@ -18,7 +20,6 @@ export function BurgerScrollHero(){
     mm.add({desktop:"(min-width:700px) and (prefers-reduced-motion:no-preference)",mobile:"(max-width:699px) and (prefers-reduced-motion:no-preference)"},ctx=>{
       const mobile=ctx.conditions?.mobile;
       const scale=mobile?.76:1;
-      const gap=mobile?40:52;
       const tl=gsap.timeline({scrollTrigger:{trigger:root.current,start:"top top",end:mobile?"+=4800":"+=6200",scrub:.75,pin:true,anticipatePin:1,invalidateOnRefresh:true}});
       tl.set(".layer",{y:(i)=>assembled[i]*scale})
         .addLabel("lift").to(".hero-kicker",{opacity:0,y:-20,duration:.45}).to(".burger-stage",{y:mobile?-18:-32,scale:1.025,duration:.6},"<")
@@ -40,7 +41,7 @@ export function BurgerScrollHero(){
     <div className="hero-topline"><span>FRIED FRESH DAILY</span><span>EST. 2026</span></div>
     <div className="hero-kicker"><span>THE ZINGER,<br/><i>PERFECTED.</i></span><p>SCROLL TO DISCOVER ↓</p></div>
     <div className="label-intro">ANATOMY OF A CRAVING</div>
-    <div className="burger-stage">{site.layers.map((l,i)=><div key={l.id} className={`layer layer-${i}${i===2?" layer-removed":""}`} aria-hidden="true">{i!==2&&<img src={`/assets/layers/${l.id}.png`} alt="" draggable="false"/>}</div>)}</div>
+    <div className="burger-stage">{site.layers.map((l,i)=><div key={l.id} className={`layer layer-${i}${i===2?" layer-removed":""}`} aria-hidden="true">{i!==2&&<Image src={`/assets/layers/${l.id}.png`} alt="" width={1024} height={layerHeights[i]} priority sizes="(max-width: 699px) 285px, 410px" draggable={false}/>}</div>)}</div>
     <div className="step-labels">{site.layers.map((l,i)=>i!==2&&<div className={`step step-${i}`} key={l.id}><b>{stepNumber(i)} / {l.name}</b><span>{l.note}</span></div>)}</div>
     <div className="story-progress"><span>BUILDING THE BRUT</span><div><i className="progress-fill"/></div></div>
     <div className="complete-copy">STACKED<br/><i>TO PERFECTION.</i></div>
