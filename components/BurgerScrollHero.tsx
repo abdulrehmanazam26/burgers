@@ -5,7 +5,9 @@ import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {site} from "@/data/site";
 
 gsap.registerPlugin(ScrollTrigger);
-const assembled=[-112,-65,-32,-4,28,58,98];
+// Finished Zinger geometry: the lower group is intentionally compressed so
+// transparent padding inside source crops cannot create visible food gaps.
+const assembled=[-112,-65,-32,-36,-4,26,66];
 const exploded=[-135,-78,0,-24,27,70,110];
 const rebuildOrder=[6,5,4,3,1,0];
 
