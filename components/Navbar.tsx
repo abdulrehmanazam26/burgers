@@ -1,0 +1,3 @@
+"use client";
+import {useState} from "react"; import {Menu,X} from "lucide-react"; import {site} from "@/data/site";
+export function Navbar(){const [open,setOpen]=useState(false);return <><header className="nav"><a href="#top" className="wordmark">BRUT<span>®</span></a><nav>{site.nav.map(x=><a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</nav><a className="order" href="#order">ORDER NOW ↗</a><button className="mobile-trigger" onClick={()=>setOpen(!open)} aria-label="Toggle menu">{open?<X/>:<Menu/>}</button></header><div className={`mobile-menu ${open?"open":""}`}>{site.nav.map(x=><a onClick={()=>setOpen(false)} key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}<a href="#order">ORDER NOW ↗</a></div></>}
