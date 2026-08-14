@@ -31,7 +31,7 @@ export function BurgerScrollHero(){
           .to(".progress-fill",{scaleX:(storyIndex+1)/rebuildOrder.length,duration:.4},"<")
           .to(`.step-${i}`,{opacity:0,y:-10,duration:.13},">+.2");
       });
-      tl.addLabel("complete").to(".label-intro",{opacity:0,duration:.2},"<").to(".complete-copy",{opacity:1,y:0,duration:.45}).to(".complete-copy",{opacity:0,y:-24,duration:.3},">+.45")
+      tl.addLabel("complete").to(".label-intro, .story-progress",{opacity:0,duration:.2},"<").to(".complete-copy",{opacity:1,y:0,duration:.45}).to(".complete-copy",{opacity:0,y:-24,duration:.3},">+.45")
         .addLabel("package").to(".package",{opacity:1,y:0,scale:1,rotateX:48,duration:.75,ease:"power3.inOut"}).to(".burger-stage",{y:mobile?112:142,scale:mobile?.45:.5,duration:1.1,ease:"power3.inOut"}).to(".burger-stage",{scale:mobile?.43:.48,duration:.32,ease:"power2.out"}).to(".box-lid",{rotateX:0,duration:.9,ease:"power3.inOut"},">+.38").to(".burger-stage",{opacity:0,duration:.18},"<+.48").to(".box-interior",{opacity:0,duration:.18},"<").to(".package",{rotateX:0,y:-12,scale:.9,duration:.9,ease:"power4.inOut"}).to(".hero-outro",{opacity:1,duration:.35},">+.15");
     });
     return()=>mm.revert();

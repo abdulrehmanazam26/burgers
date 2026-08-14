@@ -11,16 +11,16 @@ export const site = {
     {id:"bottom", name:"TOASTED BASE", note:"Built from the bottom up.", y:472},
   ],
   burgers: [
-    {name:"THE ZINGER",desc:"Crispy chicken, cheddar, pickles, lettuce, Brut sauce",price:"12.90",tone:"red"},
-    {name:"FIRE ZINGER",desc:"Hot crispy chicken, pepper jack, jalapeño, ember sauce",price:"13.90",tone:"yellow"},
-    {name:"CRISP CLUB",desc:"Crispy chicken, shredded lettuce, pickles, ranch",price:"11.90",tone:"cream"},
-    {name:"BBQ CRUNCH",desc:"Crispy chicken, smoked cheddar, onion jam, black BBQ",price:"14.50",tone:"dark"},
+    {name:"THE ZINGER",desc:"Crispy chicken, cheddar, pickles, lettuce, Brut sauce",price:1290,tone:"red"},
+    {name:"FIRE ZINGER",desc:"Hot crispy chicken, pepper jack, jalapeño, ember sauce",price:1390,tone:"yellow"},
+    {name:"CRISP CLUB",desc:"Crispy chicken, shredded lettuce, pickles, ranch",price:1190,tone:"cream"},
+    {name:"BBQ CRUNCH",desc:"Crispy chicken, smoked cheddar, onion jam, black BBQ",price:1450,tone:"dark"},
   ],
   menu: {
-    BURGERS:[["The Zinger","Crispy chicken · cheddar · Brut sauce","12.90"],["Fire Zinger","Hot crispy chicken · jalapeño · ember sauce","13.90"],["Zinger Jr.","Crispy chicken · American cheese · pickles","9.50"]],
-    CHICKEN:[["Crisp Club","Buttermilk chicken · ranch · pickles","11.90"],["Hot Bird","Hot glaze · slaw · comeback sauce","12.50"]],
-    SIDES:[["Sea Salt Fries","Skin-on · double fried","4.20"],["Loaded Brut Fries","Beef · cheese · Brut sauce","7.90"],["Onion Rings","Craggy · crisp · ranch","5.20"]],
-    DRINKS:[["House Lemonade","Fresh lemon · cane sugar","3.90"],["Cola","Classic fountain pour","3.20"]]
+    BURGERS:[["The Zinger","Crispy chicken · cheddar · Brut sauce","1290"],["Fire Zinger","Hot crispy chicken · jalapeño · ember sauce","1390"],["Zinger Jr.","Crispy chicken · American cheese · pickles","950"]],
+    CHICKEN:[["Crisp Club","Buttermilk chicken · ranch · pickles","1190"],["Hot Bird","Hot glaze · slaw · comeback sauce","1250"]],
+    SIDES:[["Sea Salt Fries","Skin-on · double fried","420"],["Loaded Brut Fries","Chicken · cheese · Brut sauce","790"],["Onion Rings","Craggy · crisp · ranch","520"]],
+    DRINKS:[["House Lemonade","Fresh lemon · cane sugar","390"],["Cola","Classic fountain pour","320"]]
   },
   locations:[
     {city:"DOWNTOWN",address:"18 Mercer Street",hours:"11 AM — 12 AM"},
