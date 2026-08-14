@@ -31,8 +31,7 @@ export function BurgerScrollHero(){
           .to(`.step-${i}`,{opacity:0,y:-10,duration:.13},">+.2");
       });
       tl.addLabel("complete").to(".label-intro",{opacity:0,duration:.2},"<").to(".complete-copy",{opacity:1,y:0,duration:.45}).to(".complete-copy",{opacity:0,y:-24,duration:.3},">+.45")
-        .addLabel("wrap").to(".paper-wrap",{opacity:1,scale:1,duration:.45,ease:"power3.out"}).to(".paper-flap-x",{scaleX:.58,duration:.45,ease:"power3.inOut"}).to(".paper-flap-y",{scaleY:.62,duration:.45,ease:"power3.inOut"},"<")
-        .addLabel("package").to(".package",{opacity:1,y:0,scale:1,rotateX:48,duration:.7,ease:"power3.inOut"}).to([".burger-stage",".paper-wrap"],{y:mobile?110:138,scale:mobile?.46:.52,duration:1.05,ease:"power3.inOut"}).to([".burger-stage",".paper-wrap"],{scale:mobile?.44:.5,duration:.3,ease:"power2.out"}).to(".box-lid",{rotateX:0,duration:.78,ease:"power3.inOut"},">+.3").to(".box-interior",{opacity:0,duration:.15},"<+.45").to(".package",{rotateX:0,y:-15,scale:.88,duration:.85,ease:"power4.inOut"}).to([".burger-stage",".paper-wrap"],{opacity:0,duration:.18},"<+.45").to(".hero-outro",{opacity:1,duration:.35},">+.15");
+        .addLabel("package").to(".package",{opacity:1,y:0,scale:1,rotateX:48,duration:.75,ease:"power3.inOut"}).to(".burger-stage",{y:mobile?112:142,scale:mobile?.45:.5,duration:1.1,ease:"power3.inOut"}).to(".burger-stage",{scale:mobile?.43:.48,duration:.32,ease:"power2.out"}).to(".box-lid",{rotateX:0,duration:.9,ease:"power3.inOut"},">+.38").to(".burger-stage",{opacity:0,duration:.18},"<+.48").to(".box-interior",{opacity:0,duration:.18},"<").to(".package",{rotateX:0,y:-12,scale:.9,duration:.9,ease:"power4.inOut"}).to(".hero-outro",{opacity:1,duration:.35},">+.15");
     });
     return()=>mm.revert();
   },[]);
@@ -41,7 +40,6 @@ export function BurgerScrollHero(){
     <div className="hero-topline"><span>FRIED FRESH DAILY</span><span>EST. 2026</span></div>
     <div className="hero-kicker"><span>THE ZINGER,<br/><i>PERFECTED.</i></span><p>SCROLL TO DISCOVER ↓</p></div>
     <div className="label-intro">ANATOMY OF A CRAVING</div>
-    <div className="paper-wrap" aria-hidden="true"><span className="paper-flap paper-flap-x"/><span className="paper-flap paper-flap-y"/><b>BRUT DELI WRAP</b></div>
     <div className="burger-stage">{site.layers.map((l,i)=><div key={l.id} className={`layer layer-${i}${i===2?" layer-removed":""}`} aria-hidden="true">{i!==2&&<img src={`/assets/layers/${l.id}.png`} alt="" draggable="false"/>}</div>)}</div>
     <div className="step-labels">{site.layers.map((l,i)=>i!==2&&<div className={`step step-${i}`} key={l.id}><b>{stepNumber(i)} / {l.name}</b><span>{l.note}</span></div>)}</div>
     <div className="story-progress"><span>BUILDING THE BRUT</span><div><i className="progress-fill"/></div></div>
