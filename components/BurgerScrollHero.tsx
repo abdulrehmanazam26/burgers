@@ -38,14 +38,14 @@ export function BurgerScrollHero(){
   },[]);
   const stepNumber=(i:number)=>String(rebuildOrder.indexOf(i)+1).padStart(2,"0");
   return <section ref={root} id="top" className="hero">
-    <div className="hero-topline"><span>FRIED FRESH DAILY</span><span>EST. 2026</span></div>
-    <div className="hero-kicker"><span>THE ZINGER,<br/><i>PERFECTED.</i></span><p>SCROLL TO DISCOVER ↓</p></div>
+    <div className="hero-topline"><span>IT&apos;S FINGER LICKIN&apos; GOOD</span><span>11 HERBS &amp; SPICES</span></div>
+    <div className="hero-kicker"><span>THE ZINGER,<br/><i>KFC STYLE.</i></span><p>SCROLL TO DISCOVER ↓</p></div>
     <div className="label-intro">ANATOMY OF A CRAVING</div>
     <div className="burger-stage">{site.layers.map((l,i)=><div key={l.id} className={`layer layer-${i}${i===2?" layer-removed":""}`} aria-hidden="true">{i!==2&&<Image src={`/assets/layers/${l.id}.png`} alt="" width={1024} height={layerHeights[i]} priority sizes="(max-width: 699px) 285px, 410px" draggable={false}/>}</div>)}</div>
     <div className="step-labels">{site.layers.map((l,i)=>i!==2&&<div className={`step step-${i}`} key={l.id}><b>{stepNumber(i)} / {l.name}</b><span>{l.note}</span></div>)}</div>
-    <div className="story-progress"><span>BUILDING THE BRUT</span><div><i className="progress-fill"/></div></div>
+    <div className="story-progress"><span>BUILDING THE ZINGER</span><div><i className="progress-fill"/></div></div>
     <div className="complete-copy">STACKED<br/><i>TO PERFECTION.</i></div>
-    <div className="package-wrap"><div className="package"><div className="box-interior"><span>PLACE BURGER HERE</span></div><div className="box-lid">BRUT <span>BUNS</span></div><div className="box-front"><small>HANDLE WITH HUNGER</small><strong>BRUT®</strong></div></div></div>
-    <div className="hero-outro">OPEN<br/>HUNGRY.</div>
+    <div className="package-wrap"><div className="package"><div className="box-interior"><span>FRESHLY PACKED</span></div><div className="box-lid">KFC <span>ZINGER</span></div><div className="box-front"><small>FINGER LICKIN&apos; GOOD</small><strong>KFC</strong></div></div></div>
+    <div className="hero-outro">KFC<br/>DELIVERED.</div>
   </section>;
 }
