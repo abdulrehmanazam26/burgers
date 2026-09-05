@@ -8,7 +8,7 @@ import {site} from "@/data/site";
 gsap.registerPlugin(ScrollTrigger);
 // Finished Zinger geometry: the lower group is intentionally compressed so
 // transparent padding inside source crops cannot create visible food gaps.
-const assembled=[-158,-111,-79,-47,-15,17,48,88];
+const assembled=[-128,-84,-58,-34,-10,14,38,68];
 const exploded=[-205,-145,-90,-38,14,66,116,164];
 const rebuildOrder=[7,6,5,4,3,2,1,0];
 const layerHeights=[275,220,200,235,200,235,145,236];
