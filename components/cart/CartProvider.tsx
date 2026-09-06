@@ -1,8 +1,193 @@
 "use client";
-import {createContext,useContext,useEffect,useMemo,useState} from "react";
-import {Minus,Plus,ShoppingBag,X} from "lucide-react";
-export type CartProduct={id:string;name:string;price:number}; type CartLine=CartProduct&{quantity:number};
-const CartContext=createContext<{count:number;add:(item:CartProduct)=>void;open:()=>void}|null>(null);
-export const useCart=()=>{const value=useContext(CartContext);if(!value)throw new Error("CartProvider missing");return value};
-function WhatsAppIcon(){return <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1.1-3.8-.2-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.7 8.7 0 0 1-2.6-1.6 9.7 9.7 0 0 1-1.8-2.2c-.2-.3 0-.5.1-.7l.5-.6.3-.6c.1-.2 0-.4 0-.6l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.9 1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.2.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>}
-export function CartProvider({children}:{children:React.ReactNode}){const [items,setItems]=useState<CartLine[]>([]),[visible,setVisible]=useState(false),[notice,setNotice]=useState("");useEffect(()=>{try{setItems(JSON.parse(localStorage.getItem("brut-cart")||"[]"))}catch{}},[]);useEffect(()=>{localStorage.setItem("brut-cart",JSON.stringify(items))},[items]);const add=(item:CartProduct)=>{setItems(old=>{const found=old.find(x=>x.id===item.id);return found?old.map(x=>x.id===item.id?{...x,quantity:x.quantity+1}:x):[...old,{...item,quantity:1}]});setVisible(true)};const change=(id:string,delta:number)=>setItems(old=>old.map(x=>x.id===id?{...x,quantity:x.quantity+delta}:x).filter(x=>x.quantity>0));const subtotal=items.reduce((sum,x)=>sum+x.price*x.quantity,0),delivery=subtotal?199:0;const value=useMemo(()=>({count:items.reduce((s,x)=>s+x.quantity,0),add,open:()=>setVisible(true)}),[items]);const sendOrder=(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();const number=process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g,"");if(!number){setNotice("Restaurant WhatsApp number needs to be connected before orders can be sent.");return}const form=new FormData(e.currentTarget),orderNo=`BRUT-${Date.now().toString().slice(-6)}`;const lines=items.map((x,i)=>`${i+1}. ${x.name} × ${x.quantity} — Rs. ${(x.price*x.quantity).toLocaleString("en-PK")}`).join("\n");const message=`*NEW BRUT BUNS ORDER*\nOrder: ${orderNo}\n\n${lines}\n\nSubtotal: Rs. ${subtotal.toLocaleString("en-PK")}\nDelivery: Rs. ${delivery}\n*Total: Rs. ${(subtotal+delivery).toLocaleString("en-PK")}*\n\n*Customer*\nName: ${form.get("name")}\nPhone: ${form.get("phone")}\nAddress: ${form.get("address")}\n\nPayment: Cash on Delivery`;window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`,"_blank","noopener,noreferrer");setNotice("WhatsApp opened with your complete order. Press Send there to confirm.")};return <CartContext.Provider value={value}>{children}<button className="whatsapp-float" onClick={()=>setVisible(true)} aria-label="Order on WhatsApp"><WhatsAppIcon/><span>ORDER ON WHATSAPP</span></button><div className={`cart-shade ${visible?"is-open":""}`} onClick={()=>setVisible(false)}/><aside className={`cart-drawer ${visible?"is-open":""}`} aria-hidden={!visible}><div className="cart-head"><div><small>WHATSAPP ORDER</small><h2>THE BAG.</h2></div><button onClick={()=>setVisible(false)} aria-label="Close cart"><X/></button></div>{!items.length?<div className="empty-cart"><ShoppingBag/><h3>YOUR BAG IS EMPTY.</h3><p>Add a Zinger from the menu, then send your order on WhatsApp.</p></div>:<><div className="cart-lines">{items.map(x=><div className="cart-line" key={x.id}><div><b>{x.name}</b><span>Rs. {(x.price*x.quantity).toLocaleString("en-PK")}</span></div><div className="quantity"><button onClick={()=>change(x.id,-1)} aria-label={`Remove one ${x.name}`}><Minus/></button><strong>{x.quantity}</strong><button onClick={()=>change(x.id,1)} aria-label={`Add one ${x.name}`}><Plus/></button></div></div>)}</div><form className="checkout" onSubmit={sendOrder}><input required name="name" placeholder="Full name"/><input required name="phone" type="tel" placeholder="Phone number"/><textarea required name="address" placeholder="Complete delivery address"/><div className="totals"><span>Subtotal <b>Rs. {subtotal.toLocaleString("en-PK")}</b></span><span>Delivery <b>Rs. {delivery}</b></span><strong>Total <b>Rs. {(subtotal+delivery).toLocaleString("en-PK")}</b></strong></div>{notice&&<p className="checkout-notice">{notice}</p>}<button className="place-order"><WhatsAppIcon/> SEND ORDER ON WHATSAPP</button><small>Cash on delivery · Your order is confirmed after WhatsApp reply</small></form></>}</aside></CartContext.Provider>}
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+export type CartProduct = { id: string; name: string; price: number };
+type CartLine = CartProduct & { quantity: number };
+const CartContext = createContext<{
+  count: number;
+  add: (item: CartProduct) => void;
+  open: () => void;
+} | null>(null);
+export const useCart = () => {
+  const value = useContext(CartContext);
+  if (!value) throw new Error("CartProvider missing");
+  return value;
+};
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1.1-3.8-.2-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.7 8.7 0 0 1-2.6-1.6 9.7 9.7 0 0 1-1.8-2.2c-.2-.3 0-.5.1-.7l.5-.6.3-.6c.1-.2 0-.4 0-.6l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.9 1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.2.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"
+      />
+    </svg>
+  );
+}
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [items, setItems] = useState<CartLine[]>([]),
+    [visible, setVisible] = useState(false),
+    [notice, setNotice] = useState("");
+  useEffect(() => {
+    try {
+      setItems(JSON.parse(localStorage.getItem("my-burger-cart") || "[]"));
+    } catch {}
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("my-burger-cart", JSON.stringify(items));
+  }, [items]);
+  const add = (item: CartProduct) => {
+    setItems((old) => {
+      const found = old.find((x) => x.id === item.id);
+      return found
+        ? old.map((x) =>
+            x.id === item.id ? { ...x, quantity: x.quantity + 1 } : x,
+          )
+        : [...old, { ...item, quantity: 1 }];
+    });
+    setVisible(true);
+  };
+  const change = (id: string, delta: number) =>
+    setItems((old) =>
+      old
+        .map((x) => (x.id === id ? { ...x, quantity: x.quantity + delta } : x))
+        .filter((x) => x.quantity > 0),
+    );
+  const subtotal = items.reduce((sum, x) => sum + x.price * x.quantity, 0),
+    delivery = subtotal ? 199 : 0;
+  const value = useMemo(
+    () => ({
+      count: items.reduce((s, x) => s + x.quantity, 0),
+      add,
+      open: () => setVisible(true),
+    }),
+    [items],
+  );
+  const sendOrder = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const number = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923474709730").replace(/\D/g, "");
+    if (!number) {
+      setNotice(
+        "Restaurant WhatsApp number needs to be connected before orders can be sent.",
+      );
+      return;
+    }
+    const form = new FormData(e.currentTarget),
+      orderNo = `MYB-${Date.now().toString().slice(-6)}`;
+    const lines = items
+      .map(
+        (x, i) =>
+          `${i + 1}. ${x.name} × ${x.quantity} — Rs. ${(x.price * x.quantity).toLocaleString("en-PK")}`,
+      )
+      .join("\n");
+    const message = `*NEW MY BURGER ORDER*\nOrder: ${orderNo}\n\n${lines}\n\nSubtotal: Rs. ${subtotal.toLocaleString("en-PK")}\nDelivery: Rs. ${delivery}\n*Total: Rs. ${(subtotal + delivery).toLocaleString("en-PK")}*\n\n*Customer*\nName: ${form.get("name")}\nPhone: ${form.get("phone")}\nAddress: ${form.get("address")}\n\nPayment: Cash on Delivery`;
+    window.open(
+      `https://wa.me/${number}?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+    setNotice(
+      "WhatsApp opened with your complete order. Press Send there to confirm.",
+    );
+  };
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+      <button
+        className="whatsapp-float"
+        onClick={() => setVisible(true)}
+        aria-label="Order on WhatsApp"
+      >
+        <WhatsAppIcon />
+        <span>ORDER ON WHATSAPP</span>
+      </button>
+      <div
+        className={`cart-shade ${visible ? "is-open" : ""}`}
+        onClick={() => setVisible(false)}
+      />
+      <aside
+        className={`cart-drawer ${visible ? "is-open" : ""}`}
+        aria-hidden={!visible}
+      >
+        <div className="cart-head">
+          <div>
+            <small>WHATSAPP ORDER</small>
+            <h2>THE BAG.</h2>
+          </div>
+          <button onClick={() => setVisible(false)} aria-label="Close cart">
+            <X />
+          </button>
+        </div>
+        {!items.length ? (
+          <div className="empty-cart">
+            <ShoppingBag />
+            <h3>YOUR BAG IS EMPTY.</h3>
+            <p>Add a beef burger from the menu, then send your order on WhatsApp.</p>
+          </div>
+        ) : (
+          <>
+            <div className="cart-lines">
+              {items.map((x) => (
+                <div className="cart-line" key={x.id}>
+                  <div>
+                    <b>{x.name}</b>
+                    <span>
+                      Rs. {(x.price * x.quantity).toLocaleString("en-PK")}
+                    </span>
+                  </div>
+                  <div className="quantity">
+                    <button
+                      onClick={() => change(x.id, -1)}
+                      aria-label={`Remove one ${x.name}`}
+                    >
+                      <Minus />
+                    </button>
+                    <strong>{x.quantity}</strong>
+                    <button
+                      onClick={() => change(x.id, 1)}
+                      aria-label={`Add one ${x.name}`}
+                    >
+                      <Plus />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <form className="checkout" onSubmit={sendOrder}>
+              <input required name="name" placeholder="Full name" />
+              <input
+                required
+                name="phone"
+                type="tel"
+                placeholder="Phone number"
+              />
+              <textarea
+                required
+                name="address"
+                placeholder="Complete delivery address"
+              />
+              <div className="totals">
+                <span>
+                  Subtotal <b>Rs. {subtotal.toLocaleString("en-PK")}</b>
+                </span>
+                <span>
+                  Delivery <b>Rs. {delivery}</b>
+                </span>
+                <strong>
+                  Total{" "}
+                  <b>Rs. {(subtotal + delivery).toLocaleString("en-PK")}</b>
+                </strong>
+              </div>
+              {notice && <p className="checkout-notice">{notice}</p>}
+              <button className="place-order">
+                <WhatsAppIcon /> SEND ORDER ON WHATSAPP
+              </button>
+              <small>
+                Cash on delivery · Your order is confirmed after WhatsApp reply
+              </small>
+            </form>
+          </>
+        )}
+      </aside>
+    </CartContext.Provider>
+  );
+}
